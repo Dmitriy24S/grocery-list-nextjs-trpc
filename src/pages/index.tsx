@@ -10,13 +10,25 @@ import { trpc } from "@/utils/trpc";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   const { data: list, refetch } = trpc.useQuery(["findAll"]);
+  useEffect(() => {
+    console.log(list, "list, data");
+    // [{…}]
+    // 0:
+    // checked: false
+    // id: 7
+    // title: "test"
+  }, [list]);
+
   const insertMutation = trpc.useMutation(["insertOne"], {
+    onSuccess: () => refetch(),
+  });
+  const deleteAllMutation = trpc.useMutation(["deleteAll"], {
     onSuccess: () => refetch(),
   });
   const [itemName, setItemName] = useState<string>("");
@@ -30,6 +42,15 @@ const Home: NextPage = () => {
     setItemName("");
   }, [itemName, insertMutation]);
 
+  // Delete all items in list
+  const deleteAll = useCallback(() => {
+    if (list?.length) {
+      deleteAllMutation.mutate({
+        ids: list.map((item) => item.id),
+      });
+    }
+  }, [list, deleteAllMutation]);
+
   return (
     // <div className={styles.container}>
     <>
@@ -42,7 +63,7 @@ const Home: NextPage = () => {
       <main>
         <Card>
           <CardContent>
-            <CardHeader title="Grocery List" listLength={list?.length ?? 0} />
+            <CardHeader title="Grocery List" listLength={list?.length ?? 0} deleteAll={deleteAll} />
             <List>
               {list?.map((item) => (
                 <ListItem key={item.id} item={item} />

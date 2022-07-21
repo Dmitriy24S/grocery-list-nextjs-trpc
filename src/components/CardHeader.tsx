@@ -2,7 +2,7 @@ import { CardHeaderProps } from "@/types/CardHeaderProps";
 import { NextPage } from "next";
 import React from "react";
 
-const CardHeader: NextPage<CardHeaderProps> = ({ title, listLength }) => {
+const CardHeader: NextPage<CardHeaderProps> = ({ title, listLength, deleteAll }) => {
   return (
     <div className="card-header flex flex-row items-center justify-between p-3 border-b border-slate-200">
       <div className="card-header-content flex flex-row items-center justify-between gap-2">
@@ -11,6 +11,13 @@ const CardHeader: NextPage<CardHeaderProps> = ({ title, listLength }) => {
           {listLength}
         </span>
       </div>
+      <button
+        type="button"
+        onClick={deleteAll}
+        className="text-sm font-medium underline text-gray-600 hover:text-gray-400 transition-colors duration-100"
+      >
+        Clear all
+      </button>
     </div>
   );
 };

@@ -24,6 +24,19 @@ export const serverRouter = trpc
         data: { title: input.title },
       });
     },
+  })
+  .mutation("deleteAll", {
+    input: z.object({
+      ids: z.number().array(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      const { ids } = input;
+      return await ctx.prisma.groceryList.deleteMany({
+        where: {
+          id: { in: ids },
+        },
+      });
+    },
   });
 
 export type ServerRouter = typeof serverRouter;
