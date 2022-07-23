@@ -7,6 +7,7 @@ import List from "@/components/List";
 import ListItem from "@/components/ListItem";
 
 import { trpc } from "@/utils/trpc";
+import { GroceryList } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -15,6 +16,7 @@ import { useCallback, useEffect, useState } from "react";
 // import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const [itemName, setItemName] = useState<string>("");
   const { data: list, refetch } = trpc.useQuery(["findAll"]);
   useEffect(() => {
     console.log(list, "list, data");
@@ -31,7 +33,9 @@ const Home: NextPage = () => {
   const deleteAllMutation = trpc.useMutation(["deleteAll"], {
     onSuccess: () => refetch(),
   });
-  const [itemName, setItemName] = useState<string>("");
+  const updateOneMutation = trpc.useMutation(["updateOne"], {
+    onSuccess: () => refetch(),
+  });
 
   // Add item to list
   const insertOne = useCallback(() => {
@@ -51,6 +55,14 @@ const Home: NextPage = () => {
     }
   }, [list, deleteAllMutation]);
 
+  // Update item
+  const updateOne = useCallback(
+    (item: GroceryList) => {
+      updateOneMutation.mutate({ ...item, checked: !item.checked });
+    },
+    [updateOneMutation]
+  );
+
   return (
     // <div className={styles.container}>
     <>
@@ -66,7 +78,7 @@ const Home: NextPage = () => {
             <CardHeader title="Grocery List" listLength={list?.length ?? 0} deleteAll={deleteAll} />
             <List>
               {list?.map((item) => (
-                <ListItem key={item.id} item={item} />
+                <ListItem key={item.id} item={item} onUpdate={updateOne} />
               ))}
             </List>
           </CardContent>

@@ -37,6 +37,20 @@ export const serverRouter = trpc
         },
       });
     },
+  })
+  .mutation("updateOne", {
+    input: z.object({
+      id: z.number(),
+      title: z.string(),
+      checked: z.boolean(),
+    }),
+    resolve: async ({ input, ctx }) => {
+      const { id, ...rest } = input;
+      return await ctx.prisma.groceryList.update({
+        where: { id },
+        data: { ...rest },
+      });
+    },
   });
 
 export type ServerRouter = typeof serverRouter;
