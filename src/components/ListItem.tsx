@@ -4,7 +4,10 @@ import React from "react";
 
 const ListItem: NextPage<ListItemProps> = ({ item }) => {
   return (
-    <label htmlFor={item.title} className="item h-12 border-b flex items-center justify-start px-3">
+    <label
+      htmlFor={item.title}
+      className="item h-12 border-b flex items-center justify-start px-3 cursor-pointer"
+    >
       <input
         id={item.title}
         type="checkbox"

@@ -20,7 +20,7 @@ const CardForm: NextPage<CardFormProps> = ({ value, onChange, submit }) => {
           onChange={onChange}
         />
         <button
-          className="absolute p-2 text-white -translate-y-1/2 bg-blue-600 rounded-full top-1/2 right-4"
+          className="absolute p-2 text-white -translate-y-1/2 bg-blue-600 rounded-full top-1/2 right-4 hover:bg-blue-500 transition-colors"
           onClick={submit}
         >
           {/* Svg + icon */}
